@@ -3,7 +3,7 @@
 session_start();
 
 $host = "localhost";
-$dbname = "codegene_task";
+$dbname = "codegenie_task";
 $username = "root";
 $password = "";
 

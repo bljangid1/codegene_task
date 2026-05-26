@@ -4,6 +4,7 @@ Author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
+
 <?php
 
 require_once '../config/db.php';
@@ -437,6 +438,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                                     </tbody>
 
                                 </table>
+                                
                             </div>
 
                         </div>
@@ -475,87 +477,46 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
     <script>
 
-        $("#frmdateWise").submit(function (e) {
-            e.preventDefault();
-            var Data = {
+        $(document).ready(function () {
 
-                "Flag": "show-date-wise",
-                "FromDate": $("#lstFromDate").val(),
-                "ToDate": $("#lstToDate").val()
-            };
+    $('#tblcampaigndata').DataTable({
 
-            $.ajax({
+        processing: true,
+        serverSide: true,
+        responsive: true,
+        destroy: true,
 
-                url: '../api/operations.php',
+        ajax: {
+            url: "../api/operations.php",
+            type: "POST",
+            contentType: "application/json",
 
-                type: 'post',
+            data: function (d) {
 
-                data: JSON.stringify(Data),
+                d.Flag = "show-date-wise";
+                d.FromDate = $("#lstFromDate").val();
+                d.ToDate = $("#lstToDate").val();
 
-                dataType: "json",
+                return JSON.stringify(d);
+            }
+        },
 
-                contentType: "application/json; charset=utf-8",
+        columns: [
+            { data: "id" },
+            { data: "user_id" },
+            { data: "scode" },
+            { data: "servicename" },
+            { data: "servicetype" },
+            { data: "transamt" },
+            { data: "chargeamt" },
+            { data: "req_dt" },
+            { data: "status" }
+        ],
 
-                success: function (response) {
-                    console.log(response);
+        pageLength: 25
+    });
 
-                    let Str = "";
-                    console.log(response.data);
-
-                    let SrNo = 0;
-
-                    response.data.forEach((value) => {
-                        let user_id = value.user_id;
-                        let scode = value.scode;
-                        let servicename = value.servicename;
-                        let servicetype = value.servicetype;
-                        let transamt = value.transamt;
-                        let chargeamt = value.chargeamt;
-                        let req_dt = value.req_dt;
-                        let status = value.status;
-
-                        SrNo++;
-
-                        Str += `
-                        <tr>
-                         <td>${SrNo}</td>
-                         <td>${user_id}</td>
-                         <td>${scode}</td>
-                         <td>${servicename}</td>
-                         <td>${servicetype}</td>
-                         <td>${transamt}</td>
-                         <td>${chargeamt}</td>
-                         <td>${req_dt}</td>
-                         <td>${status}</td>
-                         </tr>
-                        `
-                    });
-                    $("#tblData").html(Str)
-
-                    $('#tblcampaigndata').DataTable({
-                        responsive: true,
-                        dom: 'Bfrtip',
-                        buttons: [
-
-                            {
-                                extend: 'excelHtml5',
-                                exportOptions: {
-                                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
-                                }
-                            },
-                            {
-                                extend: 'pdfHtml5',
-                                orientation: 'landscape',
-                                exportOptions: {
-                                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
-                                }
-                            },
-                        ]
-                    });
-
-                }
-            });
-        });
+});
 
     </script>
 

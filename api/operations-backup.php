@@ -95,57 +95,60 @@ if ($Flag == "Login") {
 //     echo json_encode($response);
 // }
 
+
 else if ($Flag == "show-date-wise") {
 
-    $request = $data;
+    $toDate = $data["ToDate"] ?? '';
+    $fromDate = $data["FromDate"] ?? '';
 
-    $start = $request['start'] ?? 0;
-    $length = $request['length'] ?? 25;
+    $response = [];
 
-    $fromDate = $request['FromDate'] ?? '';
-    $toDate = $request['ToDate'] ?? '';
+    // If no dates selected
+    if (empty($fromDate) || empty($toDate)) {
 
-    $where = "";
+        $query = "SELECT  `user_id`, `scode`, `servicename`, `servicetype`, `transamt`, `chargeamt`, `req_dt`, `status`  
+          FROM assdt_service_consumption_table 
+          ORDER BY id DESC 
+          LIMIT 500";
+        $stmt = $conn->prepare($query);
 
-    $params = [];
+        $execute = $stmt->execute();
 
-    if (!empty($fromDate) && !empty($toDate)) {
+    } else {
 
-        $where = " WHERE DATE(req_dt) BETWEEN ? AND ? ";
-        $params[] = $fromDate;
-        $params[] = $toDate;
+        // Fetch date-wise data
+        $query = "SELECT  `user_id`, `scode`, `servicename`, `servicetype`, `transamt`, `chargeamt`, `req_dt`, `status` 
+                  FROM assdt_service_consumption_table
+                  WHERE DATE(req_dt) BETWEEN ? AND ? LIMIT 10000";
+
+        $stmt = $conn->prepare($query);
+
+        $execute = $stmt->execute([$fromDate, $toDate]);
     }
 
-    $query = "
-        SELECT *
-        FROM assdt_service_consumption_table
-        $where
-        ORDER BY id DESC
-        LIMIT $start, $length
-    ";
+    if ($execute) {
 
-    $stmt = $conn->prepare($query);
-    $stmt->execute($params);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($result) {
 
-    // Total Records
-    $totalQuery = "
-        SELECT COUNT(*) as total
-        FROM assdt_service_consumption_table
-        $where
-    ";
+            $response['message'] = "Data Fetched";
+            $response['status'] = "success";
+            $response['data'] = $result;
 
-    $totalStmt = $conn->prepare($totalQuery);
-    $totalStmt->execute($params);
+        } else {
 
-    $totalData = $totalStmt->fetch(PDO::FETCH_ASSOC);
+            $response['message'] = "No Data Found";
+            $response['status'] = "failed";
+            $response['data'] = [];
+        }
 
-    echo json_encode([
-        "draw" => intval($request['draw']),
-        "recordsTotal" => intval($totalData['total']),
-        "recordsFiltered" => intval($totalData['total']),
-        "data" => $result
-    ]);
+    } else {
+
+        $response['message'] = "Query Failed";
+        $response['status'] = "failed";
+    }
+
+    echo json_encode($response);
 }
 ?>
