@@ -265,7 +265,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <!--sidebar start-->
 <?php
 
-$parentStmt = $pdo->prepare("
+$parentStmt = $conn->prepare("
     SELECT *
     FROM assdt_sidebar
     WHERE parent_id = 0
@@ -292,7 +292,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
                     <?php
 
-                    $childStmt = $pdo->prepare("
+                    $childStmt = $conn->prepare("
                         SELECT *
                         FROM assdt_sidebar
                         WHERE parent_id = ?
@@ -329,7 +329,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
                                     <li>
 
-                                        <a href="/<?= $child['link_url']; ?>">
+                                        <a href="./<?= $child['link_url']; ?>">
 
                                             <?= htmlspecialchars($child['tab_name']); ?>
 

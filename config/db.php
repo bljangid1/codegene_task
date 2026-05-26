@@ -9,13 +9,13 @@ $password = "";
 
 try {
 
-    $pdo = new PDO(
+    $conn = new PDO(
         "mysql:host=$host;dbname=$dbname;charset=utf8",
         $username,
         $password
     );
 
-    $pdo->setAttribute(
+    $conn->setAttribute(
         PDO::ATTR_ERRMODE,
         PDO::ERRMODE_EXCEPTION
     );
