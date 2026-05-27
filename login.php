@@ -44,7 +44,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			<input type="password" class="ggg" name="Password" id="password" placeholder="PASSWORD" required="">
 			<span><input type="checkbox" />Remember Me</span>
 			<h6><a href="#">Forgot Password?</a></h6>
-				<div class="clearfix"></div>
+            <div class="clearfix"></div>
+            <div id="msg"></div>
 				<input type="submit" value="Sign In" name="login">
 		</form>
 		<p>Don't Have an Account ?<a href="registration.html">Create an account</a></p>
@@ -82,7 +83,13 @@ $("#loginForm").submit(function(e){
                         window.location.href = "index.php"; 
                    
                 } else {
-                    alertify.error(response.message);
+                    // alertify.error(response.message);
+                    $("#msg").html(
+                    '<div style="color:red;">'
+                    + response["status"] +': ' + response["message"] +
+                    '</div>'
+                );
+
                 }
             },
             error: function(xhr, status, error) {

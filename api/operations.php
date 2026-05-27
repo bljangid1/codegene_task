@@ -19,12 +19,7 @@ if ($Flag == "Login") {
     $Email = $data["Email"] ?? '';
     $Password = $data["Password"] ?? '';
 
-    $select = "SELECT * 
-               FROM assdt_users 
-               WHERE email_id = ? 
-               AND password = MD5(?) 
-               AND is_active = 'ACTIVE' 
-               LIMIT 1";
+    $select = "SELECT * FROM assdt_users WHERE email_id = ? AND password = MD5(?) AND is_active = 'ACTIVE' LIMIT 1";
 
     $stmt = $conn->prepare($select);
 
@@ -65,7 +60,7 @@ if ($Flag == "Login") {
 
 //     $query = "SELECT * 
 //               FROM assdt_service_consumption_table
-//               WHERE DATE(created_at) BETWEEN ? AND ?";
+//               WHERE DATE(req_dt) BETWEEN ? AND ? LIMIT 10000";
 
 //     $stmt = $conn->prepare($query);
 
@@ -130,11 +125,7 @@ else if ($Flag == "show-date-wise") {
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Total Records
-    $totalQuery = "
-        SELECT COUNT(*) as total
-        FROM assdt_service_consumption_table
-        $where
-    ";
+    $totalQuery = "SELECT COUNT(*) as total FROM assdt_service_consumption_table $where ";
 
     $totalStmt = $conn->prepare($totalQuery);
     $totalStmt->execute($params);

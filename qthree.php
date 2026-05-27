@@ -7,10 +7,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 <?php
 
-require_once '../config/db.php';
+require_once 'config/db.php';
 
 if(!isset($_SESSION['user_id'])){
-    header("Location: ../login.php");
+    header("Location: login.php");
     exit;
 }
 
@@ -26,20 +26,20 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     <script
         type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
     <!-- bootstrap-css -->
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
     <!-- //bootstrap-css -->
     <!-- Custom CSS -->
-    <link href="../css/style.css" rel='stylesheet' type='text/css' />
-    <link href="../css/style-responsive.css" rel="stylesheet" />
+    <link href="css/style.css" rel='stylesheet' type='text/css' />
+    <link href="css/style-responsive.css" rel="stylesheet" />
     <!-- font CSS -->
     <link
         href='//fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic'
         rel='stylesheet' type='text/css'>
     <!-- font-awesome icons -->
-    <link rel="stylesheet" href="../css/font.css" type="text/css" />
-    <link href="../css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/font.css" type="text/css" />
+    <link href="css/font-awesome.css" rel="stylesheet">
     <!-- //font-awesome icons -->
-    <script src="../js/jquery2.0.3.min.js"></script>
+    <script src="js/jquery2.0.3.min.js"></script>
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
 
@@ -150,7 +150,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                             </li>
                             <li>
                                 <a href="#">
-                                    <span class="photo"><img alt="avatar" src="../images/3.png"></span>
+                                    <span class="photo"><img alt="avatar" src="images/3.png"></span>
                                     <span class="subject">
                                         <span class="from">Jonathan Smith</span>
                                         <span class="time">Just now</span>
@@ -162,7 +162,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                             </li>
                             <li>
                                 <a href="#">
-                                    <span class="photo"><img alt="avatar" src="../images/1.png"></span>
+                                    <span class="photo"><img alt="avatar" src="images/1.png"></span>
                                     <span class="subject">
                                         <span class="from">Jane Doe</span>
                                         <span class="time">2 min ago</span>
@@ -174,7 +174,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                             </li>
                             <li>
                                 <a href="#">
-                                    <span class="photo"><img alt="avatar" src="../images/3.png"></span>
+                                    <span class="photo"><img alt="avatar" src="images/3.png"></span>
                                     <span class="subject">
                                         <span class="from">Tasi sam</span>
                                         <span class="time">2 days ago</span>
@@ -186,7 +186,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                             </li>
                             <li>
                                 <a href="#">
-                                    <span class="photo"><img alt="avatar" src="../images/2.png"></span>
+                                    <span class="photo"><img alt="avatar" src="images/2.png"></span>
                                     <span class="subject">
                                         <span class="from">Mr. Perfect</span>
                                         <span class="time">2 hour ago</span>
@@ -253,7 +253,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                     <!-- user login dropdown start-->
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <img alt="" src="../images/2.png">
+                            <img alt="" src="images/2.png">
                             <span class="username">
                                 <?= $_SESSION['username']; ?>
                             </span>
@@ -262,7 +262,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                         <ul class="dropdown-menu extended logout">
                             <li><a href="#"><i class=" fa fa-suitcase"></i>Profile</a></li>
                             <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li>
-                            <li><a href="../Logout.php"><i class="fa fa-key"></i> Log Out</a></li>
+                            <li><a href="Logout.php"><i class="fa fa-key"></i> Log Out</a></li>
                         </ul>
                     </li>
                     <!-- user login dropdown end -->
@@ -389,8 +389,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                             Service Consumption Table
                         </div>
                         <div class="row w3-res-tb" style="">
-                            <div class="col-12 col-md-12 col-lg-12">
-                                <form id='frmdateWise' method="POST">
+                            <div class="col-12 col-md-12 col-lg-12"><form id='frmdateWise' method="POST">
 
                                 <div class="row">
                                     <div class="col-md-4 col-sm-12">
@@ -399,8 +398,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                                         <input type='date' class="form-control" id="lstFromDate" name="lstFromDate" required>
                                     </div>
                                     <div class="col-md-4 col-sm-12">
-                                        <label for="" class="col-form-label">To Date<span
-                                                style="color:red;">*</span></label>
+                                        <label for="" class="col-form-label">To Date</label>
                                         <input type='date' class="form-control" id="lstToDate" name="lstToDate" required>
                                     </div>
                                     <br>
@@ -409,8 +407,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                                     </div>
 
                                 </div>
-                            </form>
-                        </div>
+                            </form></div>
                         </div>
                         <div class="row w3-res-tb">
 
@@ -421,7 +418,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                         <div class="row w3-res-tb">
 
                             <div class="table-responsive">
-                                <table class='table table-bordered' id='tbldata'>
+                                <table class='table table-bordered' id='tblcampaigndata'>
 
                                     <thead>
                                         <tr>
@@ -464,13 +461,13 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     </section>
     <script src="https://code.jquery.com/jquery-4.0.0.js"
         integrity="sha256-9fsHeVnKBvqh3FB2HYu7g2xseAZ5MlN6Kz/qnkASV8U=" crossorigin="anonymous"></script>
-    <script src="../js/bootstrap.js"></script>
-    <script src="../js/jquery.dcjqaccordion.2.7.js"></script>
-    <script src="../js/scripts.js"></script>
-    <script src="../js/jquery.slimscroll.js"></script>
-    <script src="../js/jquery.nicescroll.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/jquery.dcjqaccordion.2.7.js"></script>
+    <script src="js/scripts.js"></script>
+    <script src="js/jquery.slimscroll.js"></script>
+    <script src="js/jquery.nicescroll.js"></script>
     <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/flot-chart/excanvas.min.js"></script><![endif]-->
-    <script src="../js/jquery.scrollTo.js"></script>
+    <script src="js/jquery.scrollTo.js"></script>
     <!-- <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script> -->
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
@@ -483,7 +480,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
        $(document).ready(function () {
 
-    var table = $('#tbldata').DataTable({
+    var table = $('#tblcampaigndata').DataTable({
 
         processing: true,
         serverSide: true,
@@ -491,7 +488,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         destroy: true,
 
         ajax: {
-            url: "../api/operations.php",
+            url: "api/operations.php",
             type: "POST",
             contentType: "application/json",
 
