@@ -12,40 +12,138 @@ $data = json_decode($json, true);
 
 $Flag = $data['Flag'] ?? '';
 
-if ($Flag == "Login") {
+if($Flag == "Submit-Form"){
+    $Name = $data["Name"];
+    $Email = $data["Email"];
+    $Password = $data["Password"];
+    // $Password = MD5($Password);
+    $Password = password_hash($data["Password"], PASSWORD_DEFAULT);
+    $Phone = $data["Phone"];
+    
+        // Get User IP Address
+    // if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+    //     $IpAddress = $_SERVER['HTTP_CLIENT_IP'];
+    // } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+    //     $IpAddress = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
+    // } else {
+    //     $IpAddress = $_SERVER['REMOTE_ADDR'];
+    // }
+
+
+        // Get user IP address (IPv4 or IPv6)
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        $IpAddress = $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $IpAddress = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
+    } else {
+        $IpAddress = $_SERVER['REMOTE_ADDR']; // Can be IPv4 or IPv6 (::1 locally)
+    }
+
+    $select = "SELECT email_id FROM assdt_users WHERE email_id = ?";
+    $stmt = $conn->prepare($select);
+    $stmt->execute([$Email]);
+
+
+    $existingUsers = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $response = [];
+
+    if($existingUsers){
+        $response["status"] = "Faiiled";
+        $response["message"] = "Email id already exists";
+    }
+    else{
+     $sql = "INSERT INTO assdt_users
+            (full_name, email_id, mobile_number, password, created_on, last_login_ip, is_active)
+            VALUES (?, ?, ?, ?, NOW(), ?, ?)";
+
+    $stmt = $conn->prepare($sql);
+ 
+     $success = $stmt->execute([
+        $Name,
+        $Email,
+        $Phone,
+        $Password,
+        $IpAddress,
+        'ACTIVE'
+    ]);
+
+
+
+    if($success){
+        $response["status"] = "success";
+        $response["message"] = "Registration Successful";
+    }
+    else{
+        $response["status"] = "failed";
+        $response["message"] = "Something went wrong";
+    }
+    }
+
+    echo json_encode($response);
+}
+
+
+else if ($Flag == "Login") {
 
     $response = [];
 
     $Email = $data["Email"] ?? '';
     $Password = $data["Password"] ?? '';
 
-    $select = "SELECT * FROM assdt_users WHERE email_id = ? AND password = MD5(?) AND is_active = 'ACTIVE' LIMIT 1";
+    $select = "SELECT * FROM assdt_users WHERE email_id = ? AND is_active = 'ACTIVE' LIMIT 1";
 
     $stmt = $conn->prepare($select);
 
-    if ($stmt->execute([$Email, $Password])) {
+    $stmt->execute([$Email]);
 
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($result) {
+    if($result){
+            // Verify Password
+            if(password_verify($Password,$data["Password"])){
+                $_SESSION["user_id"] = $result["user_id"];
+                $_SESSION["username"] = $result["full_name"];
 
-            $_SESSION['user_id'] = $result['id'];
-            $_SESSION['username'] = $result['full_name'];
-
-            $response['message'] = "Logged in successfully";
-            $response['status'] = "success";
-
-        } else {
-
-            $response['message'] = "Please Check Your Credentials!";
-            $response['status'] = "failed";
+                $response["status"] = "Success";
+                $response["message"] = "Login Successfully";
+            }
+            else{
+                $response["status"] = "Failed";
+                $response["message"] = "Invalid Password";
+            }
+        }
+        else{
+            $response["status"] = "Failed";
+            $respons["message"] = "Invalid Email";
         }
 
-    } else {
 
-        $response['message'] = "Database query failed";
-        $response['status'] = "failed";
-    }
+    //md5()
+
+    // if ($stmt->execute([$Email, $Password])) {
+
+    //     $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    //     if ($result) {
+
+    //         $_SESSION['user_id'] = $result['id'];
+    //         $_SESSION['username'] = $result['full_name'];
+
+    //         $response['message'] = "Logged in successfully";
+    //         $response['status'] = "success";
+
+    //     } else {
+
+    //         $response['message'] = "Please Check Your Credentials!";
+    //         $response['status'] = "failed";
+    //     }
+
+    // } else {
+
+    //     $response['message'] = "Database query failed";
+    //     $response['status'] = "failed";
+    // }
 
     echo json_encode($response);
 }

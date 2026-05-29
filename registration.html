@@ -18,6 +18,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <!-- Custom CSS -->
 <link href="css/style.css" rel='stylesheet' type='text/css' />
 <link href="css/style-responsive.css" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/css/alertify.css" integrity="sha512-MpdEaY2YQ3EokN6lCD6bnWMl5Gwk7RjBbpKLovlrH6X+DRokrPRAF3zQJl1hZUiLXfo2e9MrOt+udOnHCAmi5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <!-- font CSS -->
 <link href='//fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
 <!-- font-awesome icons -->
@@ -25,24 +26,34 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <link href="css/font-awesome.css" rel="stylesheet"> 
 <!-- //font-awesome icons -->
 <script src="js/jquery2.0.3.min.js"></script>
+<style>
+	
+		.error{
+			color: red;
+			font-weight: 500;
+			font-size: 15px;
+		}
+	
+</style>
 </head>
 <body>
 <div class="reg-w3">
 <div class="w3layouts-main">
 	<h2>Register Now</h2>
-		<form action="#" method="post">
-			<input type="text" class="ggg" name="Name" placeholder="NAME" required="">
-			<input type="email" class="ggg" name="Email" placeholder="E-MAIL" required="">
-			<input type="text" class="ggg" name="Phone" placeholder="PHONE" required="">
-			<input type="password" class="ggg" name="Password" placeholder="PASSWORD" required="">
+		<form id="submitForm" method="post">
+			<input type="text" class="ggg" id="txtname" name="txtname" placeholder="NAME">
+			<input type="email" class="ggg" id="txtemail" name="txtemail" placeholder="E-MAIL">
+			<input type="text" class="ggg" id="txtphone" name="txtphone" placeholder="PHONE">
+			<input type="password" class="ggg" id="txtpassword" name="txtpassword" placeholder="PASSWORD">
 			<h4><input type="checkbox" />I agree to the Terms of Service and Privacy Policy</h4>
 			
 				<div class="clearfix"></div>
 				<input type="submit" value="submit" name="register">
 		</form>
-		<p>Already Registered.<a href="login.html">Login</a></p>
+		<p>Already Registered.<a href="login.php">Login</a></p>
 </div>
 </div>
+
 <script src="js/bootstrap.js"></script>
 <script src="js/jquery.dcjqaccordion.2.7.js"></script>
 <script src="js/scripts.js"></script>
@@ -50,5 +61,109 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <script src="js/jquery.nicescroll.js"></script>
 <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/flot-chart/excanvas.min.js"></script><![endif]-->
 <script src="js/jquery.scrollTo.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/additional-methods.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/alertify.js" integrity="sha512-eOUPKZXJTfgptSYQqVilRmxUNYm0XVHwcRHD4mdtCLWf/fC9XWe98IT8H1xzBkLL4Mo9GL0xWMSJtgS5te9rQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+
+
+
+// $("#submitForm").submit(function(e){
+// 	alert("Submitted");
+// })
+$("#submitForm").validate({
+    rules: {
+        txtname: {
+            required: true
+        },
+
+        txtemail: {
+            required: true,
+            email: true,
+            pattern: /^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/
+        },
+
+        txtphone: {
+            required: true,
+            digits: true,
+            minlength: 10,
+            maxlength: 10,
+            // pattern: /^[6-9]\d{9}$/
+        },
+
+        txtpassword: {
+            required: true,
+            minlength: 8,
+			// pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+
+        }
+    },
+
+    messages: {
+        txtname: {
+            required: "Full name is required",
+        },
+
+        txtemail: {
+            required: "Email is required",
+            email: "Please enter a valid email address",
+            pattern: "Email format should be like example@gmail.com",
+        },
+
+        txtphone: {
+            required: "Mobile number is required",
+            digits: "Only numbers are allowed",
+            minlength: "Mobile number must be 10 digits",
+            maxlength: "Mobile number must be 10 digits",
+            // pattern: "Enter a valid 10-digit mobile number",
+        },
+
+        txtpassword: {
+            required: "Password is required",
+            minlength: "Password must be at least 8 characters",
+			// pattern: "Password must contain uppercase, lowercase, number, and special character",
+        }
+    },
+    submitHandler: function(e){
+
+        let data = {
+            "Name": $("#txtname").val(),
+            "Email": $("#txtemail").val(),
+            "Phone":$("#txtphone").val(),
+            "Password":$("#txtpassword").val(),
+            "Flag":"Submit-Form",
+        }
+
+        let jsonData = JSON.stringify(data);
+
+        $.ajax({
+            url: "api/operations.php",
+            type:"POST",
+            data:jsonData,
+            dataType:"JSON",
+            contentType:"application/json; charset=utf-8",
+
+            success: function (response) {
+                            if (response.status === "success") {
+                                  alertify.success(response.message);
+                                  setTimeout(() => {
+                                      window.location.href="login.php";
+                                  }, 2000);
+
+                            }
+                            else{
+                                alertify.error(response.message);
+                            }
+                        }
+
+        })
+
+    }
+	
+});
+
+ </script>
 </body>
 </html>
